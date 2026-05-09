@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perschlingtaler Vergleichsbewerb</title>
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f2f2f2;
+      margin:0;
+      padding:30px;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:auto;
+      background:white;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      text-align:center;
+      color:#b30000;
+      margin-bottom:25px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th, td{
+      border:1px solid #ccc;
+      padding:10px;
+      text-align:center;
+      transition:0.3s;
+    }
+
+    th{
+      background:#b30000;
+      color:white;
+    }
+
+    tr:nth-child(even){
+      background:#fafafa;
+    }
+
+    input{
+      width:90%;
+      padding:6px;
+      text-align:center;
+      border:1px solid #bbb;
+      border-radius:5px;
+      font-size:15px;
+    }
+
+    .gesamt{
+      font-weight:bold;
+      color:#b30000;
+    }
+
+    .btn{
+      margin-top:20px;
+      padding:12px 20px;
+      background:#b30000;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:16px;
+    }
+
+    .btn:hover{
+      background:#8f0000;
+    }
+
+    /* Platzierungen */
+
+    .gold{
+      background:linear-gradient(90deg,#ffd700,#ffec8b) !important;
+      font-weight:bold;
+    }
+
+    .silver{
+      background:linear-gradient(90deg,#c0c0c0,#e8e8e8) !important;
+      font-weight:bold;
+    }
+
+    .bronze{
+      background:linear-gradient(90deg,#cd7f32,#e6b17a) !important;
+      font-weight:bold;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Perschlingtaler Vergleichsbewerb</h1>
+
+  <table id="rangliste">
+    <thead>
+      <tr>
+        <th>Platz</th>
+        <th>Mannschaft</th>
+        <th>Zeit (Sek.)</th>
+        <th>Fehler</th>
+        <th>Gesamtzeit</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>1</td>
+
+        <td>
+          <input type="text" placeholder="Mannschaft">
+        </td>
+
+        <td>
+          <input type="number"
+                 step="0.01"
+                 class="zeit"
+                 placeholder="z.B. 38.45"
+                 oninput="berechnen(this)">
+        </td>
+
+        <td>
+          <input type="number"
+                 class="fehler"
+                 placeholder="z.B. 10"
+                 oninput="berechnen(this)">
+        </td>
+
+        <td class="gesamt">0.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button class="btn" onclick="addRow()">
+    + Mannschaft hinzufügen
+  </button>
+
+</div>
+
+<script>
+
+function berechnen(element){
+
+  const row = element.parentElement.parentElement;
+
+  const zeit =
+    parseFloat(row.querySelector(".zeit").value) || 0;
+
+  const fehler =
+    parseFloat(row.querySelector(".fehler").value) || 0;
+
+  const gesamt = zeit + fehler;
+
+  row.querySelector(".gesamt").innerText =
+    gesamt.toFixed(2);
+
+  sortiereTabelle();
+}
+
+function addRow(){
+
+  const tbody =
+    document.querySelector("#rangliste tbody");
+
+  const rowCount = tbody.rows.length + 1;
+
+  const row = tbody.insertRow();
+
+  row.innerHTML = `
+    <td>${rowCount}</td>
+
+    <td>
+      <input type="text" placeholder="Mannschaft">
+    </td>
+
+    <td>
+      <input type="number"
+             step="0.01"
+             class="zeit"
+             placeholder="Zeit"
+             oninput="berechnen(this)">
+    </td>
+
+    <td>
+      <input type="number"
+             class="fehler"
+             placeholder="Fehler"
+             oninput="berechnen(this)">
+    </td>
+
+    <td class="gesamt">0.00</td>
+  `;
+}
+
+function sortiereTabelle(){
+
+  const tbody =
+    document.querySelector("#rangliste tbody");
+
+  const rows =
+    Array.from(tbody.querySelectorAll("tr"));
+
+  rows.sort((a,b)=>{
+
+    const aGesamt =
+      parseFloat(a.querySelector(".gesamt").innerText);
+
+    const bGesamt =
+      parseFloat(b.querySelector(".gesamt").innerText);
+
+    return aGesamt - bGesamt;
+  });
+
+  rows.forEach((row,index)=>{
+
+    row.cells[0].innerText = index + 1;
+
+    /* Farben zurücksetzen */
+    row.classList.remove("gold","silver","bronze");
+
+    /* Top 3 einfärben */
+    if(index === 0){
+      row.classList.add("gold");
+    }
+    else if(index === 1){
+      row.classList.add("silver");
+    }
+    else if(index === 2){
+      row.classList.add("bronze");
+    }
+
+    tbody.appendChild(row);
+  });
+}
+
+</script>
+
+</body>
+</html>
