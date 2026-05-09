@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Perschlingtaler Vergleichsbewerbb</title>
+  <title>Perschlingtaler Vergleichsbewerb</title>
 
   <style>
     body{
@@ -143,29 +143,9 @@
     </tbody>
   </table>
 
-<td>
-          <input type="text" placeholder="Perschling">
-        </td>
-
-        <td>
-          <input type="number"
-                 step="0.01"
-                 class="zeit"
-                 placeholder="41,25"
-                 oninput="berechnen(this)">
-        </td>
-
-        <td>
-          <input type="number"
-                 class="fehler"
-                 placeholder="20"
-                 oninput="berechnen(this)">
-        </td>
-
-        <td class="gesamt">61,25</td>
-      </tr>
-    </tbody>
-  </table>
+  <button class="btn" onclick="addRow()">
+    + Mannschaft hinzufügen
+  </button>
 
 </div>
 
